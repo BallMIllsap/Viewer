@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2015 iChano incorporation's Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.zhongyun.viewer.setting;
 
 import com.ichano.rvs.viewer.StreamerInfoMgr;
@@ -13,6 +28,7 @@ import com.ichano.rvs.viewer.constant.RvsRecordType;
 import com.zhongyun.viewer.MyViewerHelper;
 import com.zhongyun.viewer.R;
 import com.zhongyun.viewer.utils.Constants;
+import com.zhongyun.viewer.widget.ToggleButton.OnToggleChanged;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
@@ -46,7 +62,8 @@ public class AlarmFragment extends BaseSettingFragment {
     private int dayFlag_1, dayFlag_2;
     private View mView;
     private Button mSave;
-
+    private com.zhongyun.viewer.widget.ToggleButton mPush;
+    private boolean pushalertStatus;
     @Override
     @Nullable
     public View onCreateView(LayoutInflater inflater,
@@ -67,11 +84,17 @@ public class AlarmFragment extends BaseSettingFragment {
     private void initData() {
         mTimeView1.setData(rvsAlarmRecordInfo,null, iCam, 0,getString(R.string.alram_setting_controller_motion_cell_label),TimeView.ALARM);
         mTimeView2.setData(rvsAlarmRecordInfo,null,iCam, 1,getString(R.string.alram_setting_controller_motion_cell_label),TimeView.ALARM);
+        if(pushalertStatus){
+            mPush.setToggleOn();
+        }else{
+            mPush.setToggleOff();
+        }
     }
 
     private void initView() {
         mTimeView1 = (TimeView) mView.findViewById(R.id.time1);
         mTimeView2 =(TimeView) mView.findViewById(R.id.time2);
+        mPush = (com.zhongyun.viewer.widget.ToggleButton)mView.findViewById(R.id.push_switch);
         mSave = (Button) mView.findViewById(R.id.save);
 
     }
@@ -94,6 +117,13 @@ public class AlarmFragment extends BaseSettingFragment {
                 }
             }
         });
+        
+        mPush.setOnToggleChanged(new OnToggleChanged() {
+            
+            @Override
+            public void onToggle(boolean on) {
+            }
+        });
     }
 
 
@@ -113,6 +143,8 @@ public class AlarmFragment extends BaseSettingFragment {
             rvsAlarmRecordInfo[i] = streamerMgr.getStreamerAlarmRecordInfo(
                     Long.valueOf(cid), i);
         }
+      //push
+        pushalertStatus = Viewer.getViewer().getStreamerInfoMgr().getStreamerInfo(Long.valueOf(cid)).isEnablePush();
     }
 
 
@@ -135,6 +167,8 @@ public class AlarmFragment extends BaseSettingFragment {
                 }
             }
         }
+        //push
+        Viewer.getViewer().getStreamerInfoMgr().setStreamerPushEnable(Long.valueOf(cid), mPush.isChecked());
     
     }
     

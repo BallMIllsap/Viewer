@@ -32,6 +32,8 @@ public class Constants {
 	public static final String RECORD_VIDEO_PATH = "ZhongYun/recordVideo";
 	public static final String CAPTURE_IAMGE_PATH = "ZhongYun/capture";
 	public static final String LOCAL_ICON_PATH = "ZhongYun/icon";
+	public static final String LOCAL_CID_ICON_PATH = "ZhongYun/cid_icon";
 	
 	public static final String CONNECTIVITY_CHANGE_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";
+	public static final String CONNECTIVITY_SESSION_STATE = "zhongyun.viewer.session_state";
 }

@@ -43,6 +43,7 @@ import com.zhongyun.viewer.login.UserInfo;
 import com.zhongyun.viewer.setting.CameraSettingsTabActivity;
 import com.zhongyun.viewer.utils.AppUtils;
 import com.zhongyun.viewer.utils.Constants;
+import com.zhongyun.viewer.utils.ImageDownloader;
 import com.zhongyun.viewer.utils.StringUtils;
 import com.zhongyun.viewer.video.RecordingVideoTypeList;
 
@@ -551,6 +552,9 @@ public class CameraListActivity extends AppCompatActivity
 			mMyViewerHelper.logout();
 			android.os.Process.killProcess(android.os.Process.myPid());
 		}
+		if(mCameraListAdapter!=null){
+		    mCameraListAdapter.clearCache();
+		}
 	}
 	
 	public  class CameraListAdapter extends BaseSwipeAdapter{
@@ -558,12 +562,14 @@ public class CameraListActivity extends AppCompatActivity
 		private LayoutInflater mLayoutInflater;
 		private List<CameraInfo> mCameraInfos;
 		private Context mContext;
-		
 		public CameraListAdapter(Context context, List<CameraInfo> infos){
 			mLayoutInflater = LayoutInflater.from(context);
 			mCameraInfos = infos;
 			mContext = context;
 		}
+		public void clearCache(){
+		    
+	    }
 		
 //		@Override
 //		public int getCount() {
@@ -757,8 +763,13 @@ public class CameraListActivity extends AppCompatActivity
           TextView cameraStateTxtView = (TextView) view.findViewById(R.id.cameraStateTxt);
           ImageView editView = (ImageView) view.findViewById(R.id.edit);
           ImageView video = (ImageView) view.findViewById(R.id.video);
+          Bitmap bmp=ImageDownloader.getInstance().getBitmapFromCache(String.valueOf(info.getCid()));
+          if(bmp==null){
+              thumbView.setImageBitmap(ImageDownloader.getInstance().getDefaultBmp(CameraListActivity.this));
+          }else{
+              thumbView.setImageBitmap(bmp);
+          }
           
-          thumbView.setImageBitmap(info.getCameraThumb());
           cameraName.setText(info.getCameraName());
           cameraStateView.setImageResource(getStateDrawable(info));
           cameraStateTxtView.setText(getStateTxtDrawable(info));

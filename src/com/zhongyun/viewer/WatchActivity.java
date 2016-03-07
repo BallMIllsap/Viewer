@@ -94,7 +94,6 @@ public class WatchActivity extends AppCompatActivity
 	
 	private String command = "{\"msgname\":\"upgradeReq\",\"requestid\":\"\",\"param\":{\"startUpgrade\":\"yes\"}}";
     private FrameLayout ContainView;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,7 +101,7 @@ public class WatchActivity extends AppCompatActivity
 		initOperateView();
 		initViewPager();
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		mGLMediaView = (GLMediaView) findViewById(R.id.media_view);
+//		mGLMediaView = (GLMediaView) findViewById(R.id.media_view);
 		mCid = getIntent().getLongExtra(Constants.INTENT_CID, 0);
 		String title = getIntent().getStringExtra(Constants.INTENT_CAMERA_NAME);
 		mToolbar.setTitle(title);
@@ -120,42 +119,42 @@ public class WatchActivity extends AppCompatActivity
                 return false;
             }
         });
-		mGLMediaView.bindCid(mCid, DEFAULT_CAMERA_INDEX);
-		mGLMediaView.openAudio(true);   // open audio capture device銆�
-		mGLMediaView.setOnLinkCameraStatusListener(new LinkCameraStatusListener() {
-			
-			@Override
-			public void startToLink() {
-				mWaitingDialog.show();
-			}
-			
-			@Override
-			public void linkSucces() {
-				mWaitingDialog.dismiss();
-			}
-			
-			@Override
-			public void linkFailed(String msg) {
-				if(TIME_UP_ERROR.equals(msg)){
-					mHandler.post(new Runnable() {
-						
-						@Override
-						public void run() {
-							Toast.makeText(WatchActivity.this, R.string.time_up_error, Toast.LENGTH_LONG).show();
-						}
-					});
-				}else{
-					mHandler.post(new Runnable() {
-						
-						@Override
-						public void run() {
-							mWaitingDialog.dismiss();
-							showLinkFailDlg();
-						}
-					});
-				}
-			}
-		});
+//		mGLMediaView.bindCid(mCid, DEFAULT_CAMERA_INDEX);
+//		mGLMediaView.openAudio(true);   // open audio capture device銆�
+//		mGLMediaView.setOnLinkCameraStatusListener(new LinkCameraStatusListener() {
+//			
+//			@Override
+//			public void startToLink() {
+//				mWaitingDialog.show();
+//			}
+//			
+//			@Override
+//			public void linkSucces() {
+//				mWaitingDialog.dismiss();
+//			}
+//			
+//			@Override
+//			public void linkFailed(String msg) {
+//				if(TIME_UP_ERROR.equals(msg)){
+//					mHandler.post(new Runnable() {
+//						
+//						@Override
+//						public void run() {
+//							Toast.makeText(WatchActivity.this, R.string.time_up_error, Toast.LENGTH_LONG).show();
+//						}
+//					});
+//				}else{
+//					mHandler.post(new Runnable() {
+//						
+//						@Override
+//						public void run() {
+//							mWaitingDialog.dismiss();
+//							showLinkFailDlg();
+//						}
+//					});
+//				}
+//			}
+//		});
 		
 		mWaitingDialog = new ProgressDialog(this);
 		mWaitingDialog.setMessage(getString(R.string.waiting));
@@ -242,47 +241,57 @@ public class WatchActivity extends AppCompatActivity
 	protected void onStart() {
 	    // TODO Auto-generated method stub
 	    super.onStart();
-	    if(ContainView.getChildCount()==0&&mGLMediaView==null){
-	        Log.i("MartinSurface","onStart add");
-	        mGLMediaView = new GLMediaView(this);
-	        ContainView.addView(mGLMediaView);
-	        mGLMediaView.bindCid(mCid, DEFAULT_CAMERA_INDEX);
-	        mGLMediaView.openAudio(true);   // open audio capture device銆�
-	        mGLMediaView.setOnLinkCameraStatusListener(new LinkCameraStatusListener() {
-	            
-	            @Override
-	            public void startToLink() {
-	                mWaitingDialog.show();
-	            }
-	            
-	            @Override
-	            public void linkSucces() {
-	                mWaitingDialog.dismiss();
-	            }
-	            
-	            @Override
-	            public void linkFailed(String msg) {
-	                if(TIME_UP_ERROR.equals(msg)){
-	                    mHandler.post(new Runnable() {
-	                        
-	                        @Override
-	                        public void run() {
-	                            Toast.makeText(WatchActivity.this, R.string.time_up_error, Toast.LENGTH_LONG).show();
-	                        }
-	                    });
-	                }else{
-	                    mHandler.post(new Runnable() {
-	                        
-	                        @Override
-	                        public void run() {
-	                            mWaitingDialog.dismiss();
-	                            showLinkFailDlg();
-	                        }
-	                    });
-	                }
-	            }
-	        });
-	    }
+	    
+	    mHandler.postDelayed(new Runnable() {
+            
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                if(ContainView.getChildCount()==0&&mGLMediaView==null){
+                    Log.i("MartinSurface","onStart add");
+                    mGLMediaView = new GLMediaView(WatchActivity.this);
+                    ContainView.addView(mGLMediaView);
+                    mGLMediaView.bindCid(mCid, DEFAULT_CAMERA_INDEX);
+                    mGLMediaView.openAudio(true);   // open audio capture device銆�
+                    mGLMediaView.setOnLinkCameraStatusListener(new LinkCameraStatusListener() {
+                        
+                        @Override
+                        public void startToLink() {
+                            mWaitingDialog.show();
+                        }
+                        
+                        @Override
+                        public void linkSucces() {
+                            mWaitingDialog.dismiss();
+                        }
+                        
+                        @Override
+                        public void linkFailed(String msg) {
+                            Log.i("MartinSurface","failed:"+msg);
+                            if(TIME_UP_ERROR.equals(msg)){
+                                mHandler.post(new Runnable() {
+                                    
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(WatchActivity.this, R.string.time_up_error, Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }else{
+                                mHandler.post(new Runnable() {
+                                    
+                                    @Override
+                                    public void run() {
+                                        mWaitingDialog.dismiss();
+                                        showLinkFailDlg();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+
+            }
+        },300);
 	}
 	@Override
 	protected void onStop() {

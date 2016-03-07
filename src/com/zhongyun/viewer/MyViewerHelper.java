@@ -21,6 +21,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -41,6 +42,8 @@ import com.ichano.rvs.viewer.ui.ViewerInitHelper;
 import com.zhongyun.viewer.db.CameraInfo;
 import com.zhongyun.viewer.db.CameraInfoManager;
 import com.zhongyun.viewer.login.UserInfo;
+import com.zhongyun.viewer.utils.Constants;
+import com.zhongyun.viewer.utils.ImageDownloader;
 import com.zhongyun.viewer.utils.PrefUtils;
 
 public class MyViewerHelper extends ViewerInitHelper{
@@ -59,7 +62,7 @@ public class MyViewerHelper extends ViewerInitHelper{
 	@SuppressLint("UseSparseArrays")
 	private HashMap<Long, Long> mThumbsGetTime = new HashMap<Long, Long>();
 	private HashMap<Long, Long> mThumbRequestMap = new HashMap<Long, Long>();
-	
+	private static Context mContext;
 	public static MyViewerHelper getInstance(Context applicationContext){
 		if(null == mViewer){
 			mViewer = new MyViewerHelper(applicationContext);
@@ -67,6 +70,7 @@ public class MyViewerHelper extends ViewerInitHelper{
 			mCameraInfoManager = new CameraInfoManager(applicationContext);
 			mCameraInfos = mCameraInfoManager.getAllCameraInfos();
 			if(null == mCameraInfos) mCameraInfos = new ArrayList<CameraInfo>();
+			mContext = applicationContext;
 		}
 		mViewer.login();
 		return mViewer;
@@ -151,7 +155,11 @@ public class MyViewerHelper extends ViewerInitHelper{
 				public void onRecvJpeg(long requestId,byte[] data) {
 					if(null == mThumbRequestMap.get(requestId)) return;
 					long cid = mThumbRequestMap.get(requestId);
-					Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+					Bitmap bmp = ImageDownloader.getInstance().getDefaultBmp(mContext) ;
+					if(data!=null){
+					    Bitmap bmpMem = ImageDownloader.getInstance().putBitmapData(String.valueOf(streamerCID), data);
+					    if(bmpMem!=null) bmp = bmpMem;
+					}
 					CameraInfo info = getCameraInfo(cid);
 					if(null != info && null != bmp){
 						info.setCameraThumb(bmp);
@@ -213,7 +221,6 @@ public class MyViewerHelper extends ViewerInitHelper{
 				}
 			}
 		}
-		
 	}
 	
 	@Override
