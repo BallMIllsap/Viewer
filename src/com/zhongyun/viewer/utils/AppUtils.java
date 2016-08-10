@@ -15,6 +15,7 @@
  */
 package com.zhongyun.viewer.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -36,6 +37,7 @@ public class AppUtils {
 		}
 	}
 	
+	@SuppressLint("NewApi")
 	public static void setStatusBarTransparent(Activity context, int tintColor){
 		// create our manager instance after the content view is set
 	    SystemBarTintManager tintManager = new SystemBarTintManager(context);

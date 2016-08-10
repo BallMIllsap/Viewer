@@ -15,15 +15,18 @@
 	        android:orientation="horizontal" 
 	        android:background="@drawable/btn_control_selector">
 			<ImageView 
+			    android:id="@+id/titlebar_back_image"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:src="@drawable/back_icon"
 			    android:layout_marginLeft="5dp"/>
 	        <TextView
+	            android:id="@+id/titlebar_back_text"
 	            style="@style/textView_back"/>
 	    </LinearLayout>
 	
 	    <LinearLayout
+	        android:id="@+id/title_text_layout"
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
 	        android:layout_centerInParent="true"
@@ -45,6 +48,11 @@
 	        android:gravity="center"
 	        android:background="@drawable/btn_control_selector">
 	
+	        <ImageView 
+			    android:id="@+id/titlebar_opt_image"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginRight="5dp"/>
 	        <TextView
 	            android:id="@+id/opt"
 	            style="@style/btn_opt" />

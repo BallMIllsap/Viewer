@@ -20,35 +20,27 @@ import java.util.List;
 
 import com.zhongyun.viewer.MyViewPagerAdapter;
 import com.zhongyun.viewer.R;
-import com.zhongyun.viewer.R.id;
-import com.zhongyun.viewer.R.layout;
 import com.zhongyun.viewer.utils.Constants;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class CameraSettingsTabActivity extends AppCompatActivity implements
+public class CameraSettingsTabActivity extends FragmentActivity implements
         ViewPager.OnPageChangeListener, OnClickListener {
-    private CoordinatorLayout mCoordinatorLayout;
-    private AppBarLayout mAppBarLayout;
-    private Toolbar mToolbar;
-    private TabLayout mTabLayout;
+//    private Toolbar mToolbar;
+//    private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
     // TabLayout中的tab标题
@@ -58,10 +50,15 @@ public class CameraSettingsTabActivity extends AppCompatActivity implements
 
     MyViewPagerAdapter mViewPagerAdapter;
 
+    RelativeLayout alarm_settings_label,scheduled_recording_label,change_password_label;
+    TextView alarm_settings_label_text,scheduled_recording_label_text,change_password_label_text,titlebar_back_text;
+    ImageView id_tab_line_iv_left,id_tab_line_iv_mid,id_tab_line_iv_right,titlebar_opt_image;
+    int onSelectColor,unSelectColor;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+    	requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
+        setContentView(R.layout.setting_activity_layout);
         // 初始化各种控件
          initViews();
 
@@ -74,15 +71,40 @@ public class CameraSettingsTabActivity extends AppCompatActivity implements
 
     }
 
+	private void initViews() {
+		// mCoordinatorLayout = (CoordinatorLayout)
+		// findViewById(R.id.id_coordinatorlayout);
+		// mAppBarLayout = (AppBarLayout) findViewById(R.id.id_appbarlayout);
+		// mToolbar = (Toolbar) findViewById(R.id.id_toolbar);
+		titlebar_back_text = (TextView) findViewById(R.id.titlebar_back_text);
+		findViewById(R.id.titlebar_opt_image).setBackgroundResource(R.drawable.save);
+		findViewById(R.id.alarm_settings_label).setOnClickListener(this);
+		findViewById(R.id.scheduled_recording_label).setOnClickListener(this);
+		findViewById(R.id.change_password_label).setOnClickListener(this);
+		findViewById(R.id.opt_linlayout).setOnClickListener(this);
+		alarm_settings_label_text = (TextView) findViewById(R.id.alarm_settings_label_text);
+		scheduled_recording_label_text = (TextView) findViewById(R.id.scheduled_recording_label_text);
+		change_password_label_text = (TextView) findViewById(R.id.change_password_label_text);
+		id_tab_line_iv_left = (ImageView) findViewById(R.id.id_tab_line_iv_left);
+		id_tab_line_iv_mid = (ImageView) findViewById(R.id.id_tab_line_iv_mid);
+		id_tab_line_iv_right = (ImageView) findViewById(R.id.id_tab_line_iv_right);
+//		mTabLayout = (TabLayout) findViewById(R.id.id_tablayout);
+		mViewPager = (ViewPager) findViewById(R.id.id_viewpager);
+		onSelectColor = getResources().getColor(R.color.athome_title);
+		unSelectColor = getResources().getColor(R.color.title_text_no_select);
+	}
+    
     private void initData() {
 
         long cid = getIntent().getLongExtra(Constants.INTENT_CID, 0);
         // Tab的标题采用string-array的方法保存，在res/values/arrays.xml中写
         mTitles = new int[] { R.string.menu_alarm_settings_label, R.string.menu_scheduled_recording_label, R.string.menu_change_password_label };
         
-        mToolbar.setTitle(mTitles[0]);
+//        mToolbar.setTitle(mTitles[0]);
+        titlebar_back_text.setText(mTitles[0]);
+        setTitleLable(0);
         // 初始化填充到ViewPager中的Fragment集合
-        mFragments = new ArrayList<>();
+        mFragments = new ArrayList<Fragment>();
         Bundle mBundle = new Bundle();
         mBundle.putString(Constants.INTENT_CID, String.valueOf(cid));
         for (int i = 0; i < mTitles.length; i++) {
@@ -106,22 +128,22 @@ public class CameraSettingsTabActivity extends AppCompatActivity implements
     private void configViews() {
 
         // 设置显示Toolbar
-        setSupportActionBar(mToolbar);
+//        setSupportActionBar(mToolbar);
         
-        mToolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            
-            @Override
-            public boolean onMenuItemClick(MenuItem arg0) {
-                int id = arg0.getItemId();
-
-                if (id == R.id.save) {
-                    BaseSettingFragment fm =  (BaseSettingFragment)mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
-                    if(fm!=null)fm.onSave();
-                    return true;
-                }
-                return false;
-            }
-        });
+//        mToolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//            
+//            @Override
+//            public boolean onMenuItemClick(MenuItem arg0) {
+//                int id = arg0.getItemId();
+//
+//                if (id == R.id.save) {
+//                    BaseSettingFragment fm =  (BaseSettingFragment)mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
+//                    if(fm!=null)fm.onSave();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
         // 初始化ViewPager的适配器，并设置给它
         mViewPagerAdapter = new MyViewPagerAdapter(this,getSupportFragmentManager(),
                 mTitles, mFragments);
@@ -131,20 +153,13 @@ public class CameraSettingsTabActivity extends AppCompatActivity implements
         // 给ViewPager添加页面动态监听器（为了让Toolbar中的Title可以变化相应的Tab的标题）
         mViewPager.addOnPageChangeListener(this);
 
-        mTabLayout.setTabMode(TabLayout.MODE_FIXED);//MODE_SCROLLABLE  MODE_FIXED
+//        mTabLayout.setTabMode(TabLayout.MODE_FIXED);//MODE_SCROLLABLE  MODE_FIXED
         // 将TabLayout和ViewPager进行关联，让两者联动起来
-        mTabLayout.setupWithViewPager(mViewPager);
+//        mTabLayout.setupWithViewPager(mViewPager);
         // 设置Tablayout的Tab显示ViewPager的适配器中的getPageTitle函数获取到的标题
-        mTabLayout.setTabsFromPagerAdapter(mViewPagerAdapter);
+//        mTabLayout.setTabsFromPagerAdapter(mViewPagerAdapter);
     }
 
-    private void initViews() {
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.id_coordinatorlayout);
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.id_appbarlayout);
-        mToolbar = (Toolbar) findViewById(R.id.id_toolbar);
-        mTabLayout = (TabLayout) findViewById(R.id.id_tablayout);
-        mViewPager = (ViewPager) findViewById(R.id.id_viewpager);
-    }
     
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -175,7 +190,8 @@ public class CameraSettingsTabActivity extends AppCompatActivity implements
 
     @Override
     public void onPageSelected(int position) {
-        mToolbar.setTitle(mTitles[position]);
+    	titlebar_back_text.setText(mTitles[position]);
+    	setTitleLable(position);
     }
 
     @Override
@@ -191,7 +207,49 @@ public class CameraSettingsTabActivity extends AppCompatActivity implements
 
     @Override
     public void onClick(View v) {
-
+    	int id = v.getId();
+    	switch (id) {
+		case R.id.opt_linlayout:
+            BaseSettingFragment fm =  (BaseSettingFragment)mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
+            if(fm!=null)fm.onSave();
+			break;
+		case R.id.alarm_settings_label:
+			mViewPager.setCurrentItem(0);
+			break;
+		case R.id.scheduled_recording_label:
+			mViewPager.setCurrentItem(1);
+			break;
+		case R.id.change_password_label:
+			mViewPager.setCurrentItem(2);
+			break;
+		default:
+			break;
+		}
+    	
     }
 
+    @SuppressWarnings("deprecation")
+	private void setTitleLable(int position){
+    	if(position == 0){
+    		alarm_settings_label_text.setTextColor(onSelectColor);
+    		id_tab_line_iv_left.setVisibility(View.VISIBLE);
+    	}else{
+    		alarm_settings_label_text.setTextColor(unSelectColor);
+    		id_tab_line_iv_left.setVisibility(View.INVISIBLE);
+    	}
+    	if(position == 1){
+    		scheduled_recording_label_text.setTextColor(onSelectColor);
+    		id_tab_line_iv_mid.setVisibility(View.VISIBLE);
+    	}else{
+    		scheduled_recording_label_text.setTextColor(unSelectColor);
+    		id_tab_line_iv_mid.setVisibility(View.INVISIBLE);
+    	}
+    	if(position == 2){
+    		change_password_label_text.setTextColor(onSelectColor);
+    		id_tab_line_iv_right.setVisibility(View.VISIBLE);
+    	}else{
+    		change_password_label_text.setTextColor(unSelectColor);
+    		id_tab_line_iv_right.setVisibility(View.INVISIBLE);
+    	}
+    }
 }

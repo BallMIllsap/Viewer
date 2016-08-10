@@ -18,6 +18,7 @@ package com.zhongyun.viewer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.ichano.rvs.viewer.ui.GLMediaView;
 import com.ichano.rvs.viewer.ui.GLMediaView.LinkCameraStatusListener;
 import com.ichano.rvs.viewer.ui.GLMediaView.SwitchFrontRearCameraResultCallback;
@@ -40,15 +41,13 @@ import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,12 +56,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View;
 
-public class WatchActivity extends AppCompatActivity 
+public class WatchActivity extends BaseActivity 
 	implements View.OnClickListener,OnPageChangeListener{
 
 	private static final String TIME_UP_ERROR = "TIME_UP";
 	private static final int DEFAULT_CAMERA_INDEX = 0;
-	private Toolbar mToolbar;
+//	private Toolbar mToolbar;
 	private GLMediaView mGLMediaView;
 	private long mCid;
 	private Handler mHandler = new Handler();
@@ -90,35 +89,36 @@ public class WatchActivity extends AppCompatActivity
 	private ImageView mSwitchCamareIconView;
 	private ImageView mFlashIconView;
 	RelativeLayout   bottom_arrow_left_layout, bottom_arrow_right_layout;
-	
-	
+	ImageView titlebar_opt_image,titlebar_back_image;
+	TextView opt,titlebar_back_text;
 	private String command = "{\"msgname\":\"upgradeReq\",\"requestid\":\"\",\"param\":{\"startUpgrade\":\"yes\"}}";
     private FrameLayout ContainView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_watch);
 		initOperateView();
 		initViewPager();
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+//		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 //		mGLMediaView = (GLMediaView) findViewById(R.id.media_view);
 		mCid = getIntent().getLongExtra(Constants.INTENT_CID, 0);
-		String title = getIntent().getStringExtra(Constants.INTENT_CAMERA_NAME);
-		mToolbar.setTitle(title);
-		setSupportActionBar(mToolbar);
-		mToolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            
-            @Override
-            public boolean onMenuItemClick(MenuItem arg0) {
-                int id = arg0.getItemId();
-
-                if (id == R.id.video) {
-                    startActivity(new Intent(WatchActivity.this, RecordingVideoTypeList.class).putExtra(Constants.INTENT_CID, String.valueOf(mCid)));
-                    return true;
-                }
-                return false;
-            }
-        });
+//		String title = getIntent().getStringExtra(Constants.INTENT_CAMERA_NAME);
+//		mToolbar.setTitle(title);
+////		setSupportActionBar(mToolbar);
+//		mToolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//            
+//            @Override
+//            public boolean onMenuItemClick(MenuItem arg0) {
+//                int id = arg0.getItemId();
+//
+//                if (id == R.id.video) {
+//                    startActivity(new Intent(WatchActivity.this, RecordingVideoTypeList.class).putExtra(Constants.INTENT_CID, String.valueOf(mCid)));
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 //		mGLMediaView.bindCid(mCid, DEFAULT_CAMERA_INDEX);
 //		mGLMediaView.openAudio(true);   // open audio capture device銆�
 //		mGLMediaView.setOnLinkCameraStatusListener(new LinkCameraStatusListener() {
@@ -170,6 +170,12 @@ public class WatchActivity extends AppCompatActivity
 		bottom_arrow_left_layout.setOnClickListener(this);
 		bottom_arrow_right_layout = (RelativeLayout) findViewById(R.id.bottom_arrow_right_layout);
 		bottom_arrow_right_layout.setOnClickListener(this);
+		findViewById(R.id.opt_linlayout).setOnClickListener(this);
+		findViewById(R.id.titlebar_opt_image).setBackgroundResource(R.drawable.video_img);
+		findViewById(R.id.back_linlayout).setClickable(false);
+		titlebar_back_text = (TextView) findViewById(R.id.titlebar_back_text);
+		String title = getIntent().getStringExtra(Constants.INTENT_CAMERA_NAME);
+		titlebar_back_text.setText(title);
 	}
 	
 	private void initViewPager() {
@@ -430,6 +436,8 @@ public class WatchActivity extends AppCompatActivity
 		case R.id.bottom_arrow_right_layout:
 			viewPager.setCurrentItem(currentIndex + 1);
 			break;
+		case R.id.opt_linlayout:
+			   startActivity(new Intent(WatchActivity.this, RecordingVideoTypeList.class).putExtra(Constants.INTENT_CID, String.valueOf(mCid)));
 			default:
 				break;
 		}

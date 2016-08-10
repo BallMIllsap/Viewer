@@ -21,17 +21,16 @@ import java.util.Locale;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
-import com.google.zxing.client.android.Intents;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.ichano.rvs.viewer.Viewer;
 import com.ichano.rvs.viewer.bean.StreamerInfo;
 import com.ichano.rvs.viewer.constant.StreamerPresenceState;
-import com.journeyapps.barcodescanner.CaptureActivity;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.update.UmengUpdateAgent;
+import com.zhongyun.viewer.BaseActivity;
 import com.zhongyun.viewer.GuideActivity;
 import com.zhongyun.viewer.MyViewerHelper;
 import com.zhongyun.viewer.R;
@@ -46,6 +45,8 @@ import com.zhongyun.viewer.utils.Constants;
 import com.zhongyun.viewer.utils.ImageDownloader;
 import com.zhongyun.viewer.utils.StringUtils;
 import com.zhongyun.viewer.video.RecordingVideoTypeList;
+import com.zhongyun.zxing.client.android.Intents;
+import com.zhongyun.zxing.journeyapps.barcodescanner.CaptureActivity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -59,9 +60,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -76,13 +74,13 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CameraListActivity extends AppCompatActivity
-	implements MyViewerHelper.CameraStateListener, View.OnClickListener,Toolbar.OnMenuItemClickListener,
-	PopupMenu.OnMenuItemClickListener, AdapterView.OnItemClickListener, OnRefreshListener<ListView>{
+public class CameraListActivity extends BaseActivity
+	implements MyViewerHelper.CameraStateListener, View.OnClickListener, AdapterView.OnItemClickListener, OnRefreshListener<ListView>{
 
 	private static final String TAG = CameraListActivity.class.getSimpleName();
 	private final static int SCANNIN_GREQUEST_CODE = 1;
@@ -101,17 +99,22 @@ public class CameraListActivity extends AppCompatActivity
 	private CameraListAdapter mCameraListAdapter;
 	private PullToRefreshListView mCameraListView;
 	private DrawerLayout mUserLayout;
-	private Toolbar mToolbar;
+//	private Toolbar mToolbar;
 	private LayoutInflater mLayoutInflater;
 	private Dialog mAboutDialog;
 	private Dialog mDisclaimerDialog;
 	private Dialog mAddCameraDlg;
 	private Dialog mExitDialog;
+	private Dialog mShowAddLayoutDialog;
 	private boolean isExitWithLogout = false;
 	
 	private CameraListHandler mCameraListHandler;
 	private AddCidHandler mAddCidHandler;
 	private EditCidHandler mEditCidHandler;
+	
+	private TextView titlebar_back_text;
+	private ImageView titlebar_opt_image;
+	private LinearLayout add_layout;
 	private Handler mHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
@@ -176,19 +179,19 @@ public class CameraListActivity extends AppCompatActivity
 		TextView userNameView = (TextView) findViewById(R.id.user_name);
 		String name = getResources().getString(R.string.not_login);
 		userNameView.setText(StringUtils.isEmpty(mUserInfo.name) ? name : mUserInfo.name);
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		mToolbar.setTitle(R.string.app_name);
-		setSupportActionBar(mToolbar);
-		mToolbar.setOnMenuItemClickListener(this);
-		mToolbar.setNavigationIcon(R.drawable.navigation_icon);
-		mToolbar.setNavigationOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(!mUserLayout.isDrawerOpen(Gravity.LEFT))
-					mUserLayout.openDrawer(Gravity.LEFT);
-			}
-		});
+//		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+//		mToolbar.setTitle(R.string.app_name);
+//		setSupportActionBar(mToolbar);
+//		mToolbar.setOnMenuItemClickListener(this);
+//		mToolbar.setNavigationIcon(R.drawable.navigation_icon);
+//		mToolbar.setNavigationOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				if(!mUserLayout.isDrawerOpen(Gravity.LEFT))
+//					mUserLayout.openDrawer(Gravity.LEFT);
+//			}
+//		});
 		
 		mViewer = Viewer.getViewer();
 		mMyViewerHelper = MyViewerHelper.getInstance(getApplicationContext());
@@ -222,7 +225,16 @@ public class CameraListActivity extends AppCompatActivity
 		//update
 		UmengUpdateAgent.setUpdateOnlyWifi(false);
 		UmengUpdateAgent.update(this);
-		
+		findViewById(R.id.back_linlayout).setOnClickListener(this);
+		findViewById(R.id.titlebar_back_image).setBackgroundResource(R.drawable.navigation_icon);
+		titlebar_back_text = (TextView) findViewById(R.id.titlebar_back_text);
+		titlebar_back_text.setText(R.string.app_name);
+		titlebar_opt_image = (ImageView) findViewById(R.id.titlebar_opt_image);
+		titlebar_opt_image.setBackgroundResource(R.drawable.add_icon);//(getResources().getDrawable(R.drawable.add_icon));
+		findViewById(R.id.opt_linlayout).setOnClickListener(this);
+		add_layout = (LinearLayout) findViewById(R.id.add_layout);
+//		findViewById(R.id.add_cid).setOnClickListener(this);
+//		findViewById(R.id.add_cid_by_qr).setOnClickListener(this);
 	}
 	
 	// Add a streamer
@@ -308,11 +320,61 @@ public class CameraListActivity extends AppCompatActivity
 			mCameraInfoManager.deleteAll();
 			finish();
 			break;
+		case R.id.back_linlayout:
+			if(!mUserLayout.isDrawerOpen(Gravity.LEFT))
+				mUserLayout.openDrawer(Gravity.LEFT);
+			break;
+		case R.id.opt_linlayout:
+			openAddDialog();
+			break;
+		case R.id.add_cid:
+			if(mShowAddLayoutDialog != null){
+				mShowAddLayoutDialog.dismiss();
+				titlebar_opt_image.setBackgroundResource(R.drawable.add_icon);
+			}
+			showAddCameraDlg();
+			break;
+		case R.id.add_cid_by_qr:
+			if(mShowAddLayoutDialog != null){
+				mShowAddLayoutDialog.dismiss();
+				titlebar_opt_image.setBackgroundResource(R.drawable.add_icon);
+			}
+			Intent intent1 = new Intent();
+			intent1.setClass(this, CaptureActivity.class);
+			intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivityForResult(intent1, SCANNIN_GREQUEST_CODE);
+			break;
 			default:
 				break;
 		}
 	}
 	
+	private void openAddDialog() {
+		// TODO Auto-generated method stub
+		if(mShowAddLayoutDialog != null){
+			mShowAddLayoutDialog.show();
+		}else{
+			View view = mLayoutInflater.inflate(R.layout.add_camera_layout, null);
+			view.findViewById(R.id.add_cid).setOnClickListener(this);
+			view.findViewById(R.id.add_cid_by_qr).setOnClickListener(this);
+			mShowAddLayoutDialog = new AlertDialog.Builder(this)
+			.setTitle("    ")
+			.setView(view)
+			.setCancelable(false)
+			.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface arg0, int arg1) {
+					// TODO Auto-generated method stub
+					arg0.dismiss();
+					titlebar_opt_image.setBackgroundResource(R.drawable.add_icon);
+				}
+			}).create();
+			mShowAddLayoutDialog.show();
+		}
+		titlebar_opt_image.setBackgroundResource(R.drawable.add_icon_2);
+	}
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
@@ -323,7 +385,7 @@ public class CameraListActivity extends AppCompatActivity
 			intent.putExtra(Constants.INTENT_CAMERA_NAME, cameraInfo.getCameraName());
 			startActivity(intent);
 		}else{
-			Toast.makeText(this, R.string.camera_offline, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.camera_offline, Toast.LENGTH_LONG);
 		}
 	}
 	
@@ -428,23 +490,23 @@ public class CameraListActivity extends AppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
 	
-	@Override
-	public boolean onMenuItemClick(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.add_cid:
-			showAddCameraDlg();
-			break;
-		case R.id.add_cid_by_qr:
-			Intent intent = new Intent();
-			intent.setClass(this, CaptureActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-			break;
-		default:
-			break;
-		}
-		return false;
-	}
+//	@Override
+//	public boolean onMenuItemClick(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case R.id.add_cid:
+//			showAddCameraDlg();
+//			break;
+//		case R.id.add_cid_by_qr:
+//			Intent intent = new Intent();
+//			intent.setClass(this, CaptureActivity.class);
+//			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//			startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+//			break;
+//		default:
+//			break;
+//		}
+//		return false;
+//	}
 	
 	@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
