@@ -50,7 +50,6 @@
         </RelativeLayout>
         
 		<ImageView
-		    android:id="@+id/line_1"
 			style="@style/line_image"/>
         <RelativeLayout
             android:id="@+id/relayout_time_loacal_video"

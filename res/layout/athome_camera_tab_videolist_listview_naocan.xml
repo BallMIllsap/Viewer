@@ -9,7 +9,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/athome_camera_main_tab_title_bar"
         android:layout_marginBottom="50dp" >
 
         <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView
@@ -59,7 +58,6 @@
         android:visibility="gone" >
 
         <ImageView
-            android:id="@+id/network_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -69,7 +67,6 @@
             style="@style/black_16_txt2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/network_icon"
             android:layout_centerInParent="true"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
@@ -93,7 +90,6 @@
             android:background="@drawable/add_cid_bg" >
 
             <TextView
-                android:id="@+id/auto_trigger_on0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -109,7 +105,6 @@
         </RelativeLayout>
 
         <ListView
-            android:id="@+id/cameraListView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:divider="@null"
@@ -123,7 +118,6 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/athome_camera_main_tab_title_bar"
         android:layout_width="fill_parent"
         android:layout_height="55dip"
         android:background="@color/athome_title"

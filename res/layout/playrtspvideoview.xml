@@ -102,7 +102,6 @@
                 android:src="@drawable/video_fullscreen" />
 
             <RelativeLayout
-                android:id="@+id/video_seek_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_toLeftOf="@id/full_screen"

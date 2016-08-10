@@ -41,7 +41,6 @@
     <string name="waiting">Live video is buffering…</string>
     <string name="device_name">Device name：</string>
     <string name="modify_camera_info">Modify streamer information</string>
-    <string name="modify_dlg_empty_info">Device name and password can not be blank.</string>
     <string name="sound_on">Sound on</string>
     <string name="sound_off">Sound off</string>
     <string name="record">Record video</string>
@@ -88,15 +87,6 @@
 	<string name="cloud_video_size">Size:</string>
 	<string name="video_list_controller_del_settings_btn">Settings</string>
 	
-	<string name="toolbar_title">New Demo</string>
-    <string name="action_settings">settings</string>
-    <string name="open">打开</string>
-    <string name="close">关闭</string>
-    <string name="header_author_name">安卓猴</string>
-    <string name="header_author_url">sunjiajia.com</string>
-    <string name="plusone">+1</string>
-    <string name="item_clicked">item clicked！</string>
-    <string name="item_longclicked">item long clicked！</string>
     
     <string-array name="video_quality">
         <item>High</item>

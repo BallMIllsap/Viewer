@@ -6,7 +6,6 @@
     android:background="@color/white" >
 
     <LinearLayout
-        android:id="@+id/date_check1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
@@ -117,7 +116,6 @@
             android:padding="5dp" >
 
             <RelativeLayout
-                android:id="@+id/start_time_zone"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_weight="1" >
@@ -143,7 +141,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/end_time_zone"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_weight="1" >
