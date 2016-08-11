@@ -84,7 +84,7 @@ public class Decoder implements ResultPointCallback {
         }
     }
 
-    private List<ResultPoint> possibleResultPoints = new ArrayList<>();
+    private List<ResultPoint> possibleResultPoints = new ArrayList<ResultPoint>();
 
     /**
      * Call immediately after decode(), from the same thread.
@@ -94,7 +94,7 @@ public class Decoder implements ResultPointCallback {
      * @return possible ResultPoints from the last decode.
      */
     public List<ResultPoint> getPossibleResultPoints() {
-        return new ArrayList<>(possibleResultPoints);
+        return new ArrayList<ResultPoint>(possibleResultPoints);
     }
 
     @Override

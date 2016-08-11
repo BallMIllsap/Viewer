@@ -83,7 +83,7 @@ public class ViewfinderView extends View {
         attributes.recycle();
 
         scannerAlpha = 0;
-        possibleResultPoints = new ArrayList<>(5);
+        possibleResultPoints = new ArrayList<ResultPoint>(5);
         lastPossibleResultPoints = null;
     }
 
@@ -156,7 +156,7 @@ public class ViewfinderView extends View {
             if (currentPossible.isEmpty()) {
                 lastPossibleResultPoints = null;
             } else {
-                possibleResultPoints = new ArrayList<>(5);
+                possibleResultPoints = new ArrayList<ResultPoint>(5);
                 lastPossibleResultPoints = currentPossible;
                 paint.setAlpha(CURRENT_POINT_OPACITY);
                 paint.setColor(resultPointColor);

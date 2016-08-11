@@ -84,7 +84,7 @@ public class CameraPreview extends ViewGroup {
 
     private RotationListener rotationListener;
 
-    private List<StateListener> stateListeners = new ArrayList<>();
+    private List<StateListener> stateListeners = new ArrayList<StateListener>();
 
     private DisplayConfiguration displayConfiguration;
     private CameraSettings cameraSettings = new CameraSettings();

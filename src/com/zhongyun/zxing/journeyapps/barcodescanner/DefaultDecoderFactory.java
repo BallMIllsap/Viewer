@@ -27,7 +27,7 @@ public class DefaultDecoderFactory implements DecoderFactory {
 
     @Override
     public Decoder createDecoder(Map<DecodeHintType, ?> baseHints) {
-        Map<DecodeHintType, Object> hints = new EnumMap<>(DecodeHintType.class);
+        Map<DecodeHintType, Object> hints = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
 
         hints.putAll(baseHints);
 

@@ -117,7 +117,7 @@ public class BarcodeView extends CameraPreview {
             decoderFactory = createDefaultDecoderFactory();
         }
         DecoderResultPointCallback callback = new DecoderResultPointCallback();
-        Map<DecodeHintType, Object> hints = new HashMap<>();
+        Map<DecodeHintType, Object> hints = new HashMap<DecodeHintType, Object>();
         hints.put(DecodeHintType.NEED_RESULT_POINT_CALLBACK, callback);
         Decoder decoder = this.decoderFactory.createDecoder(hints);
         callback.setDecoder(decoder);

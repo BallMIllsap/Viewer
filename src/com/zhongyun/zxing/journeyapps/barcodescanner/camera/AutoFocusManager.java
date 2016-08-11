@@ -45,7 +45,7 @@ public final class AutoFocusManager {
     private static final Collection<String> FOCUS_MODES_CALLING_AF;
 
     static {
-        FOCUS_MODES_CALLING_AF = new ArrayList<>(2);
+        FOCUS_MODES_CALLING_AF = new ArrayList<String>(2);
         FOCUS_MODES_CALLING_AF.add(Camera.Parameters.FOCUS_MODE_AUTO);
         FOCUS_MODES_CALLING_AF.add(Camera.Parameters.FOCUS_MODE_MACRO);
     }
